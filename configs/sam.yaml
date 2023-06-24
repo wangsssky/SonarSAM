@@ -1,0 +1,40 @@
+---
+
+DATA_PATH: '/path/to/md_fls_dataset/data/watertank-segmentation'
+IMAGE_LIST_PATH: '/path/to/marine_debris'
+RANDOM_SEED: 42
+
+MODEL_DIR: './saves/'
+MODEL_NAME: 'SonarSAM'
+# huge
+# SAM_NAME: 'vit_h'
+# SAM_CHECKPOINT: '/path/to/sam_vit_h_4b8939.pth'
+# large
+SAM_NAME: 'vit_l'
+SAM_CHECKPOINT: '/path/to/sam_vit_l_0b3195.pth'
+# big
+# SAM_NAME: 'vit_b'
+# SAM_CHECKPOINT: '/path/to/sam_vit_b_01ec64.pth'
+IS_FINETUNE_IMAGE_ENCODER: False
+USE_ADAPTATION: True
+ADAPTATION_TYPE: 'LORA' # 'LORA', 'learnable_prompt_layer'
+HEAD_TYPE: 'semantic_mask_decoder_LORA' # 'custom' 'semantic_mask_decoder'
+
+EPOCH_NUM: 30
+RESUME_FROM: 0
+
+TRAIN_BATCHSIZE: 4
+VAL_BATCHSIZE: 1 # fixed
+
+OPTIMIZER: 'ADAM'
+WEIGHT_DECAY: 0.00005
+MOMENTUM: 0.9
+LEARNING_RATE: 0.0003
+WARM_LEN: 1
+
+INPUT_SIZE: 1024
+OUTPUT_CHN: 12
+EVAL_METRIC: 'DICE'
+
+PRT_LOSS: False
+VISUALIZE: False
