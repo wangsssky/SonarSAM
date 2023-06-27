@@ -1,7 +1,12 @@
 # SonarSAM
-This study presents the introduction of the Segment-Anything-Model (SAM) to sonar images. We conduct a comprehensive investigation into fine-tuning methods for SAM, including LoRA and visual prompt tuning. To facilitate comparison, we provide a framework that integrates these fine-tuning methods for SAM. If this project is helpful to your research, we kindly request that you cite our paper.
+This study presents the introduction of the Segment-Anything-Model (SAM) to sonar images. We conduct a comprehensive investigation into fine-tuning methods for SAM, including LoRA and visual prompt tuning. To facilitate comparison, we provide a framework that integrates these fine-tuning methods for SAM. If this project is helpful to your research, please consider citing our paper.
 ```
-
+@article{wang2023sonarsam,
+  title={When SAM Meets Sonar Images},
+  author={Wang, Lin and Ye, Xiufen and Zhu, Liqiang and Wu, Weijie and Zhang, Jianguo and Xing, Huiming and Hu, Chao},
+  journal={arXiv preprint arXiv:2306.14109},
+  year={2023}
+}
 ```
 
 # Dataset
