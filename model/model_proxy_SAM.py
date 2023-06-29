@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from model.segment_anything.modeling.common import LayerNorm2d
 from model.segment_anything.modeling.image_encoder import Block
 from model.segment_anything import sam_model_registry
+from model.mobile_encoder.setup_mobile_sam import setup_model as build_sam_mobile
 
 from model.loss_functions import dice_loss, multilabel_dice_loss
 from model.utils import init_weights
