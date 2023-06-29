@@ -15,6 +15,10 @@ SAM_CHECKPOINT: '/path/to/sam_vit_l_0b3195.pth'
 # big
 # SAM_NAME: 'vit_b'
 # SAM_CHECKPOINT: '/path/to/sam_vit_b_01ec64.pth'
+# mobile 
+# SAM_NAME: 'mobile'
+# SAM_CHECKPOINT: '/path/to/mobile_sam.pt'
+
 IS_FINETUNE_IMAGE_ENCODER: False
 USE_ADAPTATION: True
 ADAPTATION_TYPE: 'LORA' # 'LORA', 'learnable_prompt_layer'
