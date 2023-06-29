@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from model.segment_anything.modeling.common import LayerNorm2d
 from model.segment_anything.modeling.image_encoder import Block
 from model.segment_anything import sam_model_registry
+from model.mobile_encoder.setup_mobile_sam import setup_model as build_sam_mobile
 
 from model.loss_functions import dice_loss, multilabel_dice_loss
 from model.utils import init_weights
@@ -139,7 +140,10 @@ class SonarSAM(nn.Module):
         super(SonarSAM, self).__init__()
         
         #load same from the pretrained model
-        self.sam = sam_model_registry[model_name](checkpoint=checkpoint, num_multimask_outputs=num_classes)
+        if model_name == 'mobile':
+            self.sam = build_sam_mobile(checkpoint=checkpoint)
+        else:
+            self.sam = sam_model_registry[model_name](checkpoint=checkpoint, num_multimask_outputs=num_classes)
         self.is_finetune_image_encoder = is_finetune_image_encoder
         self.use_adaptation = use_adaptation
         self.adaptation_type = adaptation_type
