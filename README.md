@@ -9,7 +9,8 @@ This study presents the introduction of the Segment-Anything-Model (SAM) to sona
 }
 ```
 # Update
-- Add [Mobile SAM](https://github.com/ChaoningZhang/MobileSAM) backbone support for Image encoder fully-tuning.
+- **2023-06-30** Support [Mobile SAM](https://github.com/ChaoningZhang/MobileSAM) backbone for fine-tuning with LoRA.
+- **2023-06-29** Support [Mobile SAM](https://github.com/ChaoningZhang/MobileSAM) backbone for fully fine-tuning.
 # Dataset
 The Marine Debris dataset is used in this work, which is available at [Forward-Looking Sonar Marine Debris Datasets](https://github.com/mvaldenegro/marine-debris-fls-datasets).
 
