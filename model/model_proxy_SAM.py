@@ -113,8 +113,10 @@ class _LoRA_qkv(nn.Module):
         qkv = self.qkv(x)  # B,N,N,3*org_C
         new_q = self.linear_b_q(self.linear_a_q(x))
         new_v = self.linear_b_v(self.linear_a_v(x))
-        qkv[:, :, :, : self.dim] += new_q
-        qkv[:, :, :, -self.dim:] += new_v
+        # qkv[:, :, :, : self.dim] += new_q
+        # qkv[:, :, :, -self.dim:] += new_v
+        qkv[..., : self.dim] += new_q
+        qkv[..., -self.dim:] += new_v
         return qkv
 
 
@@ -157,36 +159,61 @@ class SonarSAM(nn.Module):
 
         if self.use_adaptation:
             if self.adaptation_type == 'learnable_prompt_layer':
-                blocks = []
-                for block in self.sam.image_encoder.blocks:
-                    blocks.append(
-                        PromptGen(block, reduction=reduction)
+                if self.model_name != 'mobile':
+                    blocks = []
+                    for block in self.sam.image_encoder.blocks:
+                        blocks.append(
+                            PromptGen(block, reduction=reduction)
+                        )
+                    self.sam.image_encoder.blocks = nn.Sequential(
+                        *blocks
                     )
-                self.sam.image_encoder.blocks = nn.Sequential(
-                    *blocks
-                )
+                else:
+                    raise ValueError('Not supported!')                  
             elif self.adaptation_type == 'LORA':
-                blocks = []
-                for blk in self.sam.image_encoder.blocks:
-                    w_qkv_linear = blk.attn.qkv
-                    self.dim = w_qkv_linear.in_features
-                    w_a_linear_q = nn.Linear(self.dim, rank, bias=False)
-                    w_b_linear_q = nn.Linear(rank, self.dim, bias=False)
-                    w_a_linear_v = nn.Linear(self.dim, rank, bias=False)
-                    w_b_linear_v = nn.Linear(rank, self.dim, bias=False)
+                if self.model_name != 'mobile':
+                    for blk in self.sam.image_encoder.blocks:
+                        w_qkv_linear = blk.attn.qkv
+                        self.dim = w_qkv_linear.in_features
+                        w_a_linear_q = nn.Linear(self.dim, rank, bias=False)
+                        w_b_linear_q = nn.Linear(rank, self.dim, bias=False)
+                        w_a_linear_v = nn.Linear(self.dim, rank, bias=False)
+                        w_b_linear_v = nn.Linear(rank, self.dim, bias=False)
 
-                    w_a_linear_q.apply(init_weights)
-                    w_b_linear_q.apply(init_weights)
-                    w_a_linear_v.apply(init_weights)
-                    w_b_linear_v.apply(init_weights)
+                        w_a_linear_q.apply(init_weights)
+                        w_b_linear_q.apply(init_weights)
+                        w_a_linear_v.apply(init_weights)
+                        w_b_linear_v.apply(init_weights)
 
-                    blk.attn.qkv = _LoRA_qkv(
-                        w_qkv_linear,
-                        w_a_linear_q,
-                        w_b_linear_q,
-                        w_a_linear_v,
-                        w_b_linear_v,
-                    )
+                        blk.attn.qkv = _LoRA_qkv(
+                            w_qkv_linear,
+                            w_a_linear_q,
+                            w_b_linear_q,
+                            w_a_linear_v,
+                            w_b_linear_v,
+                        )
+                else:
+                    for i_layer in range(1, len(self.sam.image_encoder.layers)):
+                        for blk in self.sam.image_encoder.layers[i_layer].blocks:
+                            w_qkv_linear = blk.attn.qkv
+                            self.dim = w_qkv_linear.in_features
+                            w_a_linear_q = nn.Linear(self.dim, rank, bias=False)
+                            w_b_linear_q = nn.Linear(rank, self.dim, bias=False)
+                            w_a_linear_v = nn.Linear(self.dim, rank, bias=False)
+                            w_b_linear_v = nn.Linear(rank, self.dim, bias=False)
+
+                            w_a_linear_q.apply(init_weights)
+                            w_b_linear_q.apply(init_weights)
+                            w_a_linear_v.apply(init_weights)
+                            w_b_linear_v.apply(init_weights)
+
+                            blk.attn.qkv = _LoRA_qkv(
+                                w_qkv_linear,
+                                w_a_linear_q,
+                                w_b_linear_q,
+                                w_a_linear_v,
+                                w_b_linear_v,
+                            ) 
             else:
                 raise ValueError('unknown adaptation type: {}'.format(self.adaptation_type))
         
