@@ -42,7 +42,4 @@ class Config_SAM:
         self.VISUALIZE = yaml_dict['VISUALIZE']
         self.EVAL_METRIC = yaml_dict['EVAL_METRIC']
 
-        if self.SAM_NAME == 'mobile':
-            self.IS_FINETUNE_IMAGE_ENCODER = False
-
 
