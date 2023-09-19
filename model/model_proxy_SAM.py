@@ -143,7 +143,7 @@ class SonarSAM(nn.Module):
         
         #load same from the pretrained model
         if model_name == 'mobile':
-            self.sam = build_sam_mobile(checkpoint=checkpoint)
+            self.sam = build_sam_mobile(checkpoint=checkpoint, num_multimask_outputs=num_classes)
         else:
             self.sam = sam_model_registry[model_name](checkpoint=checkpoint, num_multimask_outputs=num_classes)
         self.is_finetune_image_encoder = is_finetune_image_encoder
