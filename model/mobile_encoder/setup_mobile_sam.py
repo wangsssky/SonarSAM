@@ -3,7 +3,7 @@ from model.mobile_encoder.tiny_vit_sam import TinyViT
 from model.segment_anything.modeling import ImageEncoderViT, MaskDecoder, PromptEncoder, Sam, TwoWayTransformer
 
 
-def setup_model(checkpoint=None):
+def setup_model(checkpoint=None, num_multimask_outputs=3):
     prompt_embed_dim = 256
     image_size = 1024
     vit_patch_size = 16
@@ -29,7 +29,7 @@ def setup_model(checkpoint=None):
             mask_in_chans=16,
             ),
             mask_decoder=MaskDecoder(
-                    num_multimask_outputs=3,
+                    num_multimask_outputs=num_multimask_outputs,
                     transformer=TwoWayTransformer(
                     depth=2,
                     embedding_dim=prompt_embed_dim,
