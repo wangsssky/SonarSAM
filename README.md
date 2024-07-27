@@ -24,6 +24,9 @@ python train_SAM_box.py --config ./configs/sam_box.yaml
 ```
 python train_SAM.py --config ./configs/sam.yaml
 ```
+# License
+The model is licensed under the [Apache 2.0 license](./LICENSE.txt).
+
 # Acknowledgment
 This project was developed based on the following awesome codes.
 - Segment Anything Model: [SAM](https://github.com/facebookresearch/segment-anything)
